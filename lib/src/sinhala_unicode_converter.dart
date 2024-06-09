@@ -1,7 +1,7 @@
 library sinhala_unicode_converter;
 // Convert Sinhala text to Unicode
 class SinhalaUnicode {
-  static String singlishToUnicode(String text) {
+  static String sinhalaToUnicode(String text) {
     text = text.replaceAll(',', '￦');
     text = text.replaceAll('.', '�');
     text = text.replaceAll('(', '￫');

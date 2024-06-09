@@ -1,6 +1,6 @@
 name: sinhala_unicode_converter
 description: "Sinhala Language Convert to the English Unicode"
-version: 1.0.0
+version: 1.0.6
 homepage: https://github.com/Nimantha-Perera/sinhala_unicode_converter
 
 environment:
