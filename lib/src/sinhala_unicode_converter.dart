@@ -1,3 +1,4 @@
+// ignore_for_file: constant_identifier_names, avoid_print
 // Main SinhalaUnicode class
 import 'package:sinhala_unicode_converter/mapping/fm_abhaya.dart';
 import 'package:sinhala_unicode_converter/mapping/fm_bamini.dart';
@@ -5,7 +6,6 @@ import 'package:sinhala_unicode_converter/mapping/fm_dlmanel.dart';
 import 'package:sinhala_unicode_converter/mapping/kaputa.dart';
 import 'package:sinhala_unicode_converter/mapping/singlish.dart';
 import 'package:sinhala_unicode_converter/mapping/singlish_phonetic_unicode.dart';
-
 
 class SinhalaUnicode {
   // Font type enumeration
@@ -24,7 +24,6 @@ class SinhalaUnicode {
   /// Initialize the converter
   static void initialize() {
     if (_isInitialized) return;
-    
     try {
       print('SinhalaUnicode converter initialized successfully');
       _isInitialized = true;
@@ -36,9 +35,9 @@ class SinhalaUnicode {
 
   /// Convert legacy font text to Unicode
   static String legacyToUnicode(String text, String fontType) {
-    _checkInitialized();
+    _ensureInitialized();
     if (text.isEmpty) return text;
-    
+
     switch (fontType) {
       case FM_ABHAYA:
         return FmAbhaya.convert(text);
@@ -46,18 +45,16 @@ class SinhalaUnicode {
         return FmBamini.convert(text);
       case DL_MANEL:
         return DlManel.convert(text);
-      // case FM_MALITHI:
-      //   return FmMalithi.convert(text);
       case KAPUTA:
         return Kaputa.convert(text);
       case SINGLISH_PHONETIC:
         return SinglishPhonetic.convert(text);
       case SINGLISH:
         return Singlish.convert(text);
-      // case TANGLISH:
-      //   return Tanglish.convert(text);
-      // case THIBUS:
-      //   return Thibus.convert(text);
+      case FM_MALITHI:
+      case TANGLISH:
+      case THIBUS:
+        throw ArgumentError('Unsupported font type: $fontType');
       default:
         throw ArgumentError('Unsupported font type: $fontType');
     }
@@ -65,38 +62,59 @@ class SinhalaUnicode {
 
   /// Auto-detect font type and convert to Unicode
   static String autoDetectAndConvert(String text) {
-    _checkInitialized();
-    
-    List<String> fontTypes = [
-      FM_ABHAYA, FM_BAMINI, DL_MANEL, FM_MALITHI, KAPUTA,
-      SINGLISH_PHONETIC, SINGLISH, TANGLISH, THIBUS
-    ];
-    
-    String bestConversion = text;
-    int maxSinhalaChars = 0;
-    
-    for (String fontType in fontTypes) {
-      try {
-        String converted = legacyToUnicode(text, fontType);
-        int sinhalaChars = _countSinhalaChars(converted);
-        
-        if (sinhalaChars > maxSinhalaChars) {
-          maxSinhalaChars = sinhalaChars;
-          bestConversion = converted;
-        }
-      } catch (e) {
-        continue;
+    _ensureInitialized();
+    if (text.isEmpty) return text;
+
+    // Check if input already has Sinhala Unicode characters
+    if (RegExp(r'[\u0D80-\u0DFF]').hasMatch(text)) {
+      return text;
+    }
+
+    // Detect FM Abhaya signature:
+    // Characters unique to FM fonts: %, <, >, ~, |, [, ], {, }, *, Õ, ï, õ, ¾, å, or Kombuwa 'f' before consonants
+    final hasFmSignature = RegExp(r'[Õ®~|\[\]{}*<>]|[f][l\.>pcgveoOkmnuhryjYIis]').hasMatch(text) ||
+        text.contains('%') ||
+        text.contains('ï') ||
+        text.contains('õ') ||
+        text.contains('¾') ||
+        text.contains('wï') ||
+        text.contains('Y%S') ||
+        text.trim() == 'uu';
+
+    if (hasFmSignature) {
+      final fmResult = FmAbhaya.convert(text);
+      if (_countSinhalaChars(fmResult) > 0) {
+        return fmResult;
       }
     }
-    
-    return bestConversion;
+
+    // Otherwise, try Singlish
+    final singlishResult = Singlish.convert(text);
+    if (_countSinhalaChars(singlishResult) > 0) {
+      return singlishResult;
+    }
+
+    // Fallback to FM Abhaya
+    final fallbackFm = FmAbhaya.convert(text);
+    if (_countSinhalaChars(fallbackFm) > 0) {
+      return fallbackFm;
+    }
+
+    return text;
   }
 
   /// Get list of supported font types
   static List<String> getSupportedFonts() {
     return [
-      FM_ABHAYA, FM_BAMINI, DL_MANEL, FM_MALITHI, KAPUTA,
-      SINGLISH_PHONETIC, SINGLISH, TANGLISH, THIBUS
+      FM_ABHAYA,
+      FM_BAMINI,
+      DL_MANEL,
+      FM_MALITHI,
+      KAPUTA,
+      SINGLISH_PHONETIC,
+      SINGLISH,
+      TANGLISH,
+      THIBUS,
     ];
   }
 
@@ -106,9 +124,9 @@ class SinhalaUnicode {
   }
 
   // Private helper methods
-  static void _checkInitialized() {
+  static void _ensureInitialized() {
     if (!_isInitialized) {
-      throw StateError('SinhalaUnicode not initialized. Call initialize() first.');
+      initialize();
     }
   }
 

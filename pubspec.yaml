@@ -1,9 +1,9 @@
-name: sinhala_unicode_converter
+﻿name: sinhala_unicode_converter
 description: "A comprehensive Flutter/Dart package for converting legacy Sinhala fonts 
   (FM Abhaya, FM Bamini, DL Manel, Kaputa) and Singlish text to Unicode. 
   Features auto-detection capabilities and supports multiple Sinhala font 
   formats for seamless text conversion in Sri Lankan applications."
-version: 1.0.9
+version: 1.1.0
 homepage: https://github.com/Nimantha-Perera/sinhala_unicode_converter
 
 environment:
@@ -42,10 +42,7 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Anuradhapura
-      fonts:
-        - asset: fonts/Anuradhapura.ttf
+# fonts: disabled
 
   #   - family: Trajan Pro
   #     fonts:

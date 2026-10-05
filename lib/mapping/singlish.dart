@@ -1,34 +1,39 @@
-class Singlish {
-  static String convert(String text) {
-    // Initialize arrays
-    List<String> vowels = [];
-    List<String> vowelsUni = [];
-    List<String> vowelModifiersUni = [];
-    List<RegExp> specialConsonants = [];
-    List<String> specialConsonantsUni = [];
-    List<String> specialCharUni = [];
-    List<String> specialChar = [];
-    List<String> consonants = [];
-    List<String> consonantsUni = [];
+// package:sinhala_unicode_converter/mapping/singlish.dart
 
-    // Populate vowels arrays
-    vowelsUni.add('ඌ'); vowels.add('oo'); vowelModifiersUni.add('ූ');
-    vowelsUni.add('ඕ'); vowels.add('o\\)'); vowelModifiersUni.add('ෝ');
-    vowelsUni.add('ඕ'); vowels.add('oe'); vowelModifiersUni.add('ෝ');
+class Singlish {
+  static final List<String> vowels = [];
+  static final List<String> vowelsUni = [];
+  static final List<String> vowelModifiersUni = [];
+  static final List<RegExp> specialConsonants = [];
+  static final List<String> specialConsonantsUni = [];
+  static final List<String> specialCharUni = [];
+  static final List<String> specialChar = [];
+  static final List<String> consonants = [];
+  static final List<String> consonantsUni = [];
+
+  static bool _initialized = false;
+
+  static void _init() {
+    if (_initialized) return;
+
+    // Vowels
+    vowelsUni.add('ඕ'); vowels.add('oo'); vowelModifiersUni.add('ෝ');
+    vowelsUni.add('ඔ'); vowels.add(r'o\)'); vowelModifiersUni.add('ො');
+    vowelsUni.add('ඔ'); vowels.add('oe'); vowelModifiersUni.add('ො');
     vowelsUni.add('ආ'); vowels.add('aa'); vowelModifiersUni.add('ා');
-    vowelsUni.add('ආ'); vowels.add('a\\)'); vowelModifiersUni.add('ා');
+    vowelsUni.add('ආ'); vowels.add(r'a\)'); vowelModifiersUni.add('ා');
     vowelsUni.add('ඈ'); vowels.add('Aa'); vowelModifiersUni.add('ෑ');
-    vowelsUni.add('ඈ'); vowels.add('A\\)'); vowelModifiersUni.add('ෑ');
-    vowelsUni.add('ඈ'); vowels.add('ae'); vowelModifiersUni.add('ෑ');
+    vowelsUni.add('ඈ'); vowels.add(r'A\)'); vowelModifiersUni.add('ෑ');
+    vowelsUni.add('ඇ'); vowels.add('ae'); vowelModifiersUni.add('ැ');
     vowelsUni.add('ඊ'); vowels.add('ii'); vowelModifiersUni.add('ී');
-    vowelsUni.add('ඊ'); vowels.add('i\\)'); vowelModifiersUni.add('ී');
+    vowelsUni.add('ඊ'); vowels.add(r'i\)'); vowelModifiersUni.add('ී');
     vowelsUni.add('ඊ'); vowels.add('ie'); vowelModifiersUni.add('ී');
-    vowelsUni.add('ඊ'); vowels.add('ee'); vowelModifiersUni.add('ී');
+    vowelsUni.add('ඒ'); vowels.add('ee'); vowelModifiersUni.add('ේ');
     vowelsUni.add('ඒ'); vowels.add('ea'); vowelModifiersUni.add('ේ');
-    vowelsUni.add('ඒ'); vowels.add('e\\)'); vowelModifiersUni.add('ේ');
+    vowelsUni.add('ඒ'); vowels.add(r'e\)'); vowelModifiersUni.add('ේ');
     vowelsUni.add('ඒ'); vowels.add('ei'); vowelModifiersUni.add('ේ');
     vowelsUni.add('ඌ'); vowels.add('uu'); vowelModifiersUni.add('ූ');
-    vowelsUni.add('ඌ'); vowels.add('u\')'); vowelModifiersUni.add('ූ');
+    vowelsUni.add('ඌ'); vowels.add(r"u'\)"); vowelModifiersUni.add('ූ');
     vowelsUni.add('ඖ'); vowels.add('au'); vowelModifiersUni.add('ෞ');
     vowelsUni.add('ඇ'); vowels.add('/a'); vowelModifiersUni.add('ැ');
     vowelsUni.add('අ'); vowels.add('a'); vowelModifiersUni.add('');
@@ -39,17 +44,15 @@ class Singlish {
     vowelsUni.add('ඔ'); vowels.add('o'); vowelModifiersUni.add('ො');
     vowelsUni.add('ඓ'); vowels.add('I'); vowelModifiersUni.add('ෛ');
 
-    int nVowels = 26;
-
-    // Populate special consonants arrays
+    // Special consonants
     specialConsonantsUni.add('ං'); specialConsonants.add(RegExp(r'\\n'));
     specialConsonantsUni.add('ඃ'); specialConsonants.add(RegExp(r'\\h'));
-    specialConsonantsUni.add('ඞ'); specialConsonants.add(RegExp(r'\\N'));
+    specialConsonantsUni.add('ඤ'); specialConsonants.add(RegExp(r'\\N'));
     specialConsonantsUni.add('ඍ'); specialConsonants.add(RegExp(r'\\R'));
     specialConsonantsUni.add('ර්\u200D'); specialConsonants.add(RegExp(r'R'));
     specialConsonantsUni.add('ර්\u200D'); specialConsonants.add(RegExp(r'\\r'));
 
-    // Populate consonants arrays
+    // Consonants
     consonantsUni.add('ඬ'); consonants.add('nnd');
     consonantsUni.add('ඳ'); consonants.add('nndh');
     consonantsUni.add('ඟ'); consonants.add('nng');
@@ -75,8 +78,8 @@ class Singlish {
     consonantsUni.add('ප'); consonants.add('p');
     consonantsUni.add('බ'); consonants.add('b');
     consonantsUni.add('ම'); consonants.add('m');
-    consonantsUni.add('‍ය'); consonants.add(r'\y');
-    consonantsUni.add('‍ය'); consonants.add('Y');
+    consonantsUni.add('්‍ය'); consonants.add(r'\y');
+    consonantsUni.add('්‍ය'); consonants.add('Y');
     consonantsUni.add('ය'); consonants.add('y');
     consonantsUni.add('ජ'); consonants.add('j');
     consonantsUni.add('ල'); consonants.add('l');
@@ -91,58 +94,65 @@ class Singlish {
     consonantsUni.add('ඨ'); consonants.add('T');
     consonantsUni.add('ඪ'); consonants.add('D');
     consonantsUni.add('ඵ'); consonants.add('P');
-    consonantsUni.add('ඹ'); consonants.add('B');
+    consonantsUni.add('භ'); consonants.add('B');
     consonantsUni.add('ෆ'); consonants.add('f');
-    consonantsUni.add('ඣ'); consonants.add('q');
+    consonantsUni.add('ක'); consonants.add('q');
     consonantsUni.add('ග'); consonants.add('g');
     consonantsUni.add('ර'); consonants.add('r');
 
-    // Populate special characters arrays
+    // Special characters
     specialCharUni.add('ෲ'); specialChar.add('ruu');
     specialCharUni.add('ෘ'); specialChar.add('ru');
 
-    // Apply conversion logic
-    // Replace special consonants
+    _initialized = true;
+  }
+
+  /// Convert Singlish text to Unicode
+  static String convert(String text) {
+    if (text.isEmpty) return text;
+    _init();
+
+    // 1. Replace special consonants
     for (int i = 0; i < specialConsonants.length; i++) {
       text = text.replaceAll(specialConsonants[i], specialConsonantsUni[i]);
     }
 
-    // Replace special characters with consonants
+    // 2. Special characters with consonants
     for (int i = 0; i < specialCharUni.length; i++) {
       for (int j = 0; j < consonants.length; j++) {
-        String s = consonants[j] + specialChar[i];
-        String v = consonantsUni[j] + specialCharUni[i];
+        final s = '${consonants[j]}${specialChar[i]}';
+        final v = '${consonantsUni[j]}${specialCharUni[i]}';
         text = text.replaceAll(s, v);
       }
     }
 
-    // Handle consonant + "r" + vowel combinations
+    // 3. Consonant + 'r' + vowel (Rakaransaya)
     for (int j = 0; j < consonants.length; j++) {
       for (int i = 0; i < vowels.length; i++) {
-        String s = consonants[j] + "r" + vowels[i];
-        String v = consonantsUni[j] + "්‍ර" + vowelModifiersUni[i];
+        final s = '${consonants[j]}r${vowels[i]}';
+        final v = '${consonantsUni[j]}්‍ර${vowelModifiersUni[i]}';
         text = text.replaceAll(s, v);
       }
-      String s = consonants[j] + "r";
-      String v = consonantsUni[j] + "්‍ර";
+      final s = '${consonants[j]}r';
+      final v = '${consonantsUni[j]}්‍ර';
       text = text.replaceAll(s, v);
     }
 
-    // Handle consonant + vowel combinations
+    // 4. Consonant + vowel
     for (int i = 0; i < consonants.length; i++) {
-      for (int j = 0; j < nVowels; j++) {
-        String s = consonants[i] + vowels[j];
-        String v = consonantsUni[i] + vowelModifiersUni[j];
+      for (int j = 0; j < vowels.length; j++) {
+        final s = '${consonants[i]}${vowels[j]}';
+        final v = '${consonantsUni[i]}${vowelModifiersUni[j]}';
         text = text.replaceAll(s, v);
       }
     }
 
-    // Replace standalone consonants
+    // 5. Standalone consonants (add hal kirima)
     for (int i = 0; i < consonants.length; i++) {
-      text = text.replaceAll(consonants[i], consonantsUni[i] + "්");
+      text = text.replaceAll(consonants[i], '${consonantsUni[i]}්');
     }
 
-    // Replace standalone vowels
+    // 6. Standalone vowels
     for (int i = 0; i < vowels.length; i++) {
       text = text.replaceAll(vowels[i], vowelsUni[i]);
     }
